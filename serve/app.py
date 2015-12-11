@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+"""
+Dash-2T
+----
+
+Dash second tier websockets and zeromq server
+
+"""
+
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
 # the best option based on available packages.
@@ -44,7 +52,8 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, rooms, disconnect
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+# what is this used for in flask?
+app.config['SECRET_KEY'] = 'REPLACE ME WITH SOMETHING RANDOM!'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 
