@@ -14,8 +14,8 @@ import subprocess
 import json
 from websocket_server import WebsocketServer
 
-dashd_path = "/Users/evan/Desktop/dash/src/dashd"
-datadir = "/Users/evan/Desktop/.dash"
+dashd_path = "/Users/evan/Desktop/dash/src/dash-cli"
+datadir = "/Users/evan/.dash2"
 
 # Called for every client connecting (after handshake)
 def new_client(client, server):
@@ -35,7 +35,15 @@ def message_received(client, server, message):
         message = message[:200]+'..'
     print("Client(%d) said: %s" % (client['id'], message))
 
-    #subprocess.call([dashd_path, datadir, json.dumps(client)])
+    if(message.find("dapi_result") > 0):
+        print("Request broadcast %d" % client['id'])
+        server.send_message_to_all(message)
+    else:
+        print dashd_path, datadir
+        f = open("/Users/evan/Desktop/tmp", "wb")
+        f.write(message)
+        f.close()
+        subprocess.call(dashd_path + " --datadir=" + datadir + " dapif /Users/evan/Desktop/tmp", shell=True)
 
 
 PORT=5000
