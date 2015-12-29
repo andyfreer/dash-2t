@@ -35,11 +35,12 @@ def message_received(client, server, message):
         message = message[:200]+'..'
     print("Client(%d) said: %s" % (client['id'], message))
 
-    if(message.find("dapi_result") > 0):
+    if(message.find("dapi_result") > 0 or message.find("dapi_message") > 0):
         print("Request broadcast %d" % client['id'])
         server.send_message_to_all(message)
     else:
         print dashd_path, datadir
+
         f = open("/Users/evan/Desktop/tmp", "wb")
         f.write(message)
         f.close()
