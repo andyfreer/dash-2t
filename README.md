@@ -6,20 +6,13 @@ Dash second tier websockets and zeromq server
 Installation
 ------------
 
-```
-$ virtualenv venv
-$ . venv/bin/activate
-Then you need to install the dependencies:
-
-(venv) $ pip install -r requirements.txt
-Finally you can run the application:
-
-(venv) $ python app.py
-
-Connect to http://localhost:5000
+pip install requirements.txt
+copy config.py.example config.py
+python app.py
 
 
--------------- note about the patched websockets_server.py ----------------
+Notes
+------------
 
 On MAC OSX, reconnections yield the following error when they try to broadcast: 
 
