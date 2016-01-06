@@ -8,16 +8,14 @@ Dash second tier websockets and zeromq server
 
 """
 
-
-
 import subprocess
 import json
 
 #importing the local one, with a patch
 from websocket_server import WebsocketServer
+from config import dashd_path, datadir
 
-dashd_path = "/Users/evan/Desktop/dash/src/dash-cli"
-datadir = "/Users/evan/.dash2"
+print dashd_path, datadir
 
 # Called for every client connecting (after handshake)
 def new_client(client, server):
