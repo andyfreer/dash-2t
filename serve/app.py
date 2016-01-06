@@ -12,6 +12,8 @@ Dash second tier websockets and zeromq server
 
 import subprocess
 import json
+
+#importing the local one, with a patch
 from websocket_server import WebsocketServer
 
 dashd_path = "/Users/evan/Desktop/dash/src/dash-cli"
