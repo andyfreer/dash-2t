@@ -1,18 +1,21 @@
 Dash2T
 ==============
 
-Dash second tier websockets and zeromq server
+Dash second tier websockets
 
 Installation
 ------------
 
-pip install requirements.txt
+pip install -r requirements.txt
 copy config.py.example config.py
 python app.py
 
 
 Notes
 ------------
+
+Listens on port 5000
+
 
 On MAC OSX, reconnections yield the following error when they try to broadcast: 
 
