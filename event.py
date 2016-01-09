@@ -9,7 +9,6 @@ Dash Event
 """
 
 import argparse
-import zmq
 from websocket import create_connection
 
 parser = argparse.ArgumentParser(description='dash event script')
