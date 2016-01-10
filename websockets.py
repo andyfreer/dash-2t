@@ -13,7 +13,7 @@ import json
 
 #importing the local one, with a patch
 from websocket_server import WebsocketServer
-from config import dashd_path, datadir
+from config import dashd_path, datadir, eventfile
 
 print dashd_path, datadir
 
@@ -37,10 +37,10 @@ def message_received(client, server, message):
     else:
         print dashd_path, datadir
 
-        f = open("/Users/evan/Desktop/tmp", "wb")
+        f = open(eventfile, "wb")
         f.write(message)
         f.close()
-        subprocess.call(dashd_path + " --datadir=" + datadir + " dapif /Users/evan/Desktop/tmp", shell=True)
+        subprocess.call(dashd_path + " --datadir=" + datadir + " dapif " + eventfile, shell=True)
 
 
 PORT=5000

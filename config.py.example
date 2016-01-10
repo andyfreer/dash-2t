@@ -6,3 +6,4 @@
 
 dashd_path = "/Users/evan/Desktop/dash/src/dash-cli"
 datadir = "/Users/evan/.dash2"
+eventfile = "/tmp/event"
