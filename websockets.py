@@ -44,7 +44,7 @@ def message_received(client, server, message):
 
 
 PORT=5000
-server = WebsocketServer(PORT)
+server = WebsocketServer(host="0.0.0.0", port=PORT)
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_received)
