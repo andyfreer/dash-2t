@@ -10,7 +10,7 @@ app = Flask(__name__)
 
     Example URL:
 
-    localhost:9000/api/v1/payme nt-request?username_merchant=aoeu&username_client=evan&amount=123000&address=XtvW7UMfabhYShm7ZHaVVdiwg2AHX8phST&description=test item&callback_url=https%3A%2F%2Fwww.google.com
+    http://localhost:9000/api/v1/payment-request?username_merchant=aoeu&username_client=evan&amount=123000&address=XtvW7UMfabhYShm7ZHaVVdiwg2AHX8phST&description=test%20item&callback_url=https%3A%2F%2Fwww.google.com%2F%23q%3D%tx%
 """
 
 @app.route("/api/v1/payment-request", methods=['POST', 'GET'])
@@ -135,13 +135,19 @@ def payment_request():
                 print "Found Match '%s'" % result
 
                 obj2 = json.loads(result2["data"]["payload"]);
-                result["data"]["error_id"] = 0;
-                result["data"]["error_message"] = "Success";
+                if obj2["status"] == "success":
+                    result["data"]["error_id"] = 0;
+                    result["data"]["error_message"] = ""
+                    callback_url = callback_url.replace("%status%", obj2["status"])
+                    callback_url = callback_url.replace("%tx%", obj2["tx"])
+                    return redirect(callback_url, 302)
+                if obj2["status"] == "failure":
+                    result["data"]["error_id"] = 1015;
+                    result["data"]["error_message"] = "User failed to send transaction"
 
-                callback_url = callback_url.replace("%status%", obj2["status"])
-                callback_url = callback_url.replace("%tx%", obj2["tx"])
-                return redirect(callback_url, 301)
-
+                    callback_url = callback_url.replace("%status%", "User%20failed%20to%20send%20transaction.")
+                    callback_url = callback_url.replace("%tx%", "")
+                    return redirect(callback_url, 302)
 
         ws.close()
 

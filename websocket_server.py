@@ -117,12 +117,15 @@ class WebsocketServer(ThreadingMixIn, TCPServer, API):
     
     def _unicast_(self, to_client, msg):
         try:
+            #print "success"
             to_client['handler'].send_message(msg)
         except:
+            #print "fail"
             pass
 
     def _multicast_(self, msg):
         for client in self.clients:
+            #print "broadcast", client,
             self._unicast_(client, msg)
         
     def handler_to_client(self, handler):
