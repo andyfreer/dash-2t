@@ -1,4 +1,6 @@
 config.py
+websocket_server.py
+
 .DS_Store
 *.py[cod]
 

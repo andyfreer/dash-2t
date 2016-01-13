@@ -17,7 +17,7 @@ Notes
 Listens on port 5000
 
 
-On MAC OSX, reconnections yield the following error when they try to broadcast: 
+On MAC OSX, reconnections yield the following error when they try to broadcast. If that happens, there's a patched file which can be activated by moving "websocket_server.py.macosx" to "websocket_server.py". It's kind of a hack job to fix the error, any help with it would be appreciated. 
 
 Traceback (most recent call last):
   File "/usr/local/Cellar/python/2.7.9/Frameworks/Python.framework/Versions/2.7/lib/python2.7/SocketServer.py", line 599, in process_request_thread

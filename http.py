@@ -47,8 +47,8 @@ def payment_request():
             address = request.args.get('address')
         if 'description' in request.args:
             description = request.args.get('description')
-        if 'callback_url' in request.args:
-            callback_url = request.args.get('callback_url')
+        # if 'callback_url' in request.args:
+        #     callback_url = request.args.get('callback_url')
         if 'signature' in request.args:
             signature = request.args.get('signature')
         
@@ -138,16 +138,16 @@ def payment_request():
                 if obj2["status"] == "success":
                     result["data"]["error_id"] = 0;
                     result["data"]["error_message"] = ""
-                    callback_url = callback_url.replace("%status%", obj2["status"])
-                    callback_url = callback_url.replace("%tx%", obj2["tx"])
-                    return redirect(callback_url, 302)
+                    # callback_url = callback_url.replace("%status%", obj2["status"])
+                    # callback_url = callback_url.replace("%tx%", obj2["tx"])
+                    # return redirect(callback_url, 302)
                 if obj2["status"] == "failure":
                     result["data"]["error_id"] = 1015;
                     result["data"]["error_message"] = "User failed to send transaction"
 
-                    callback_url = callback_url.replace("%status%", "User%20failed%20to%20send%20transaction.")
-                    callback_url = callback_url.replace("%tx%", "")
-                    return redirect(callback_url, 302)
+                    # callback_url = callback_url.replace("%status%", "User%20failed%20to%20send%20transaction.")
+                    # callback_url = callback_url.replace("%tx%", "")
+                    # return redirect(callback_url, 302)
 
         ws.close()
 
