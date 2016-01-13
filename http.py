@@ -86,9 +86,9 @@ def payment_request():
     if not description:
         result["data"]["error_id"] = 1010;
         result["data"]["error_message"] = "Missing required parameter: description";
-    if not callback_url:
-        result["data"]["error_id"] = 1010;
-        result["data"]["error_message"] = "Missing required parameter: callback_url";
+    # if not callback_url:
+    #     result["data"]["error_id"] = 1010;
+    #     result["data"]["error_message"] = "Missing required parameter: callback_url";
     # if not signature:
     #     result["data"]["error_id"] = 1010;
     #     result["data"]["error_message"] = "Missing required parameter: signature";
