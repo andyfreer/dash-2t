@@ -1,10 +1,39 @@
 from flask import Flask, request, redirect
-from websocket import create_connection
 import json
 import re
 from random import randint
+import websocket
+import threading
+from time import sleep
 
 app = Flask(__name__)
+dapi = None
+
+messages = []
+
+def on_message(ws, message):
+    global messages
+    messages.append(message)
+
+def on_close(ws):
+    print "### closed ###"
+
+def connect_to_ws():
+    global ws
+
+    ws = websocket.WebSocketApp("ws://localhost:5000/", on_message = on_message, on_close = on_close)
+    wst = threading.Thread(target=ws.run_forever)
+    wst.daemon = True
+    wst.start()
+
+def send_message(obj):
+    try:
+        ws.send(json.dumps(obj))
+    except:
+        connect_to_ws()
+        sleep(1)
+        ws.send(json.dumps(obj))
+
 
 """
 
@@ -15,6 +44,9 @@ app = Flask(__name__)
 
 @app.route("/api/v1/payment-request", methods=['POST', 'GET'])
 def payment_request():
+    global ws
+    global messages
+
     username_merchant = None
     username_client = None
     amount = None
@@ -110,6 +142,7 @@ def payment_request():
         obj = { 
             "object" : "dapi_command",
             "data" : {
+                "id" : str(randint(100000, 9999999)),
                 "payment_id" : payment_id,
                 "command" : "send_message",
                 "sub_command" : "payment-request",
@@ -120,38 +153,51 @@ def payment_request():
             }
         }
 
-        ws = create_connection("ws://localhost:5000")
-        ws.send(json.dumps(obj))
+        send_message(obj)
 
-        waiting = True
-        while waiting:
-            result2 =  json.loads(ws.recv())
+        count = 0
+        while count < 300 and count != -1: #30 seconds
+            count += 1
 
-            print "New result '%s'" % result2
+            for message in messages:
+                result2 =  json.loads(message)
 
-            if result2['object'] == "dapi_message" and result2["data"]["sub_command"] == "payment-request-result":
-                waiting = False
+                print "New result '%s'" % result2
 
-                print "Found Match '%s'" % result
+                if result2['object'] == "dapi_message" and result2["data"]["sub_command"] == "payment-request-result":
+                    waiting = False
 
-                obj2 = json.loads(result2["data"]["payload"]);
-                if obj2["status"] == "success":
-                    result["data"]["error_id"] = 0;
-                    result["data"]["error_message"] = ""
-                    # callback_url = callback_url.replace("%status%", obj2["status"])
-                    # callback_url = callback_url.replace("%tx%", obj2["tx"])
-                    # return redirect(callback_url, 302)
-                if obj2["status"] == "failure":
-                    result["data"]["error_id"] = 1015;
-                    result["data"]["error_message"] = "User failed to send transaction"
+                    print "Found Match '%s'" % result2
 
-                    # callback_url = callback_url.replace("%status%", "User%20failed%20to%20send%20transaction.")
-                    # callback_url = callback_url.replace("%tx%", "")
-                    # return redirect(callback_url, 302)
+                    obj2 = json.loads(result2["data"]["payload"]);
+                    if obj2["status"] == "success":
+                        result["data"]["error_id"] = 0;
+                        result["data"]["error_message"] = ""
+                        result["data"]["status"] = obj2["status"]
+                        result["data"]["tx"] = obj2["tx"]
+                        # callback_url = callback_url.replace("%status%", obj2["status"])
+                        # callback_url = callback_url.replace("%tx%", obj2["tx"])
+                        # return redirect(callback_url, 302)
+                        count = -1
+                    if obj2["status"] == "failure":
+                        result["data"]["error_id"] = 1015;
+                        result["data"]["error_message"] = "User failed to send transaction"
 
-        ws.close()
+                        result["data"]["status"] = obj2["status"]
+                        result["data"]["tx"] = obj2["tx"]
 
-    #print result
+                        # callback_url = callback_url.replace("%status%", "User%20failed%20to%20send%20transaction.")
+                        # callback_url = callback_url.replace("%tx%", "")
+                        # return redirect(callback_url, 302)
+                        count = -1
+
+            sleep(0.1)
+
+        if count >= 300:
+            result["data"]["error_id"] = 1020;
+            result["data"]["error_message"] = "Request timed out"
+
+        messages = []
 
     # callback_url = callback_url.replace("%status%", "failure")
     # callback_url = callback_url.replace("%tx%", "")
