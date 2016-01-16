@@ -5,8 +5,10 @@ from random import randint
 import websocket
 import threading
 from time import sleep
+from flask.ext.cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 dapi = None
 
 messages = []

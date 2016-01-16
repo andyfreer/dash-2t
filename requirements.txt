@@ -2,3 +2,4 @@ websockets-server==0.4
 websocket-client
 zmq
 flask
+flask-cors
