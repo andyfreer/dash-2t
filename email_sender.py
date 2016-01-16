@@ -7,17 +7,18 @@ def SendValidationEmail(sender, receiver, name, from_uid, to_uid, code):
 
     message = """From: Dash Network <masternode@dashevolution.com>
 To: """+to_uid+""" <"""+receiver+""">
-Subject: Please validate your email for DashEvolution
+Subject: Please confirm your signup to Dash Evolution
 
 
 Hello """ + to_uid + """,
 
-It looks like you just registered an account for DashEvolution. To validate your email, please click the following link. 
-Afterward you should be able to login to your wallet and start using it.
+Welcome to Dash Evolution!
+
+Please confirm your signup using this link:
 
 http://www.dashevolution.com/#/signup/confirm/"""+from_uid+"""/"""+to_uid+"""/"""+code+"""
 
-For more information about using dash evolution, watch the video here:
+To learn more about Dash Evolution please check out our documentation and source here:
 
 http://www.dash.org/evolution
 
